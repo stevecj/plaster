@@ -1,7 +1,8 @@
 # Plaster
 
-Assists in creation of concreate data object model classes that can be easily
-converted to/from nested Ruby Array/Hash data structures.
+A toolkit to aid in the convertsion of complex data into or out of a
+concretely modeled structure for purposes of transport between software
+systems or components.
 
 ## Installation
 

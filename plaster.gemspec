@@ -9,7 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Steve Jorgensen"]
   spec.email         = ["stevej@stevej.name"]
 
-  spec.summary       = "Create data object model classes convertible to/from standard nested data structures"
+  spec.summary       = "Aids conversion of data into or out a concretely modeled " \
+                       "structure for transport between software systems or " \
+                       "components."
   spec.homepage      = "https://github.com/stevecj/plaster"
   spec.license       = "MIT"
 
