@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'virtus'
 
+module Plaster
 module PlasterSpec
   class VirtusFooBar
     include Virtus.model
@@ -32,11 +33,11 @@ module PlasterSpec
       end
 
       it "returns an independent, unfrozen copy of a hash with indifferent access" do
-        original = HashWithIndifferentAccess.new(a: 1, b: 2).freeze
+        original = HashWIA.new(a: 1, b: 2).freeze
         data = subject.deconstruct( original )
         expect( data ).to eq( original )
         data[:a] = 99
-        expect( original ).to eq( HashWithIndifferentAccess.new(a: 1, b: 2) )
+        expect( original ).to eq( HashWIA.new(a: 1, b: 2) )
       end
 
       it "returns a hash map with indifferent access for a flat hash" do
@@ -55,12 +56,12 @@ module PlasterSpec
         vehicle_class = Struct.new(:type, :wheels)
         vehicle = vehicle_class.new('tricycle', 3)
         data = subject.deconstruct( vehicle )
-        expect( data ).to eq( HashWithIndifferentAccess.new(type: 'tricycle', wheels: 3) )
+        expect( data ).to eq( HashWIA.new(type: 'tricycle', wheels: 3) )
       end
 
       it "returns a hash map with indifferent access for a flat Virtus model" do
         obj = VirtusFooBar.new(foo: 123, bar: 'xyz')
-        expect( subject.deconstruct(obj) ).to eq( HashWithIndifferentAccess.new(foo: 123, bar: 'xyz') )
+        expect( subject.deconstruct(obj) ).to eq( HashWIA.new(foo: 123, bar: 'xyz') )
       end
 
       it "returns a hash map for an object with a minimal #each_pair implementation" do
@@ -71,9 +72,10 @@ module PlasterSpec
           end
         end
         object = klass.new
-        expect( subject.deconstruct(object) ).to eq( HashWithIndifferentAccess.new(key_a: 'aaa', key_b: 'bbb') )
+        expect( subject.deconstruct(object) ).to eq( HashWIA.new(key_a: 'aaa', key_b: 'bbb') )
       end
     end
 
   end
+end
 end
