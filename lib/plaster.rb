@@ -1,6 +1,5 @@
-require 'active_support/hash_with_indifferent_access'
 require "plaster/version"
-require "plaster/model_deconstruction"
+require "plaster/model_deconstructor"
 
 module Plaster
   HashWIA = ::HashWithIndifferentAccess
@@ -11,7 +10,7 @@ module Plaster
 
   module SingletonBehavior
     def deconstruct(obj)
-      ModelDeconstruction.deconstruct(obj)
+      ModelDeconstructor.call(obj)
     end
   end
 

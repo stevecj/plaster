@@ -2,10 +2,23 @@ require 'active_support/hash_with_indifferent_access'
 
 module Plaster
 
-  module ModelDeconstruction
-    module_function
+  class ModelDeconstructor
 
-    def deconstruct(obj)
+    class << self
+      extend Forwardable
+
+      def_delegator :default_instance, :call
+
+      def default_instance
+        @default_instance ||= new
+      end
+    end
+
+    def self.default_instance
+      @default_instance ||= new
+    end
+
+    def call(obj)
       if obj.respond_to?( :model_deconstruct )
         obj.model_deconstruct
       elsif obj.respond_to?( :to_hash )
