@@ -4,7 +4,9 @@ require "plaster/version"
 module Plaster
   HashWIA = ::HashWithIndifferentAccess
 
-  extend (module SingletonBehavior ; self ; end)
+  extend (
+    module SingletonBehavior ; self ; end
+  )
 
   module SingletonBehavior
 
