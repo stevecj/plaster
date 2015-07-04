@@ -5,6 +5,7 @@ module Plaster
   extend (module SingletonBehavior ; self ; end)
 
   module SingletonBehavior
+
     def deconstruct(obj)
       if obj.respond_to?(:to_hash)
         HashWithIndifferentAccess.new(obj.to_hash)
@@ -16,12 +17,13 @@ module Plaster
           h.with_indifferent_access :
           HashWithIndifferentAccess.new(h)
       elsif obj.respond_to?(:each_pair)
-        HashWithIndifferentAccess[
-          obj.each_pair.entries
-        ]
+        HashWithIndifferentAccess.new.tap do |h|
+          obj.each_pair do |k,v| ; h[k] = v ; end
+        end
       else
         obj
       end
     end
+
   end
 end

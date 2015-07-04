@@ -43,6 +43,17 @@ module PlasterSpec
         obj = VirtusFooBar.new(foo: 123, bar: 'xyz')
         expect( subject.deconstruct(obj) ).to eq( HashWithIndifferentAccess.new(foo: 123, bar: 'xyz') )
       end
+
+      it "returns a hash map for an object with a naive #each_pair implementation" do
+        klass = Class.new do
+          def each_pair
+            yield [:key_a, 'aaa']
+            yield [:key_b, 'bbb']
+          end
+        end
+        object = klass.new
+        expect( subject.deconstruct(object) ).to eq( HashWithIndifferentAccess.new(key_a: 'aaa', key_b: 'bbb') )
+      end
     end
 
   end
