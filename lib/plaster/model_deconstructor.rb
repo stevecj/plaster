@@ -19,23 +19,49 @@ module Plaster
     end
 
     def call(obj)
-      if obj.respond_to?( :model_deconstruct )
+      if obj.nil? || true == obj || false == obj
+        obj
+      elsif obj.respond_to?( :model_deconstruct )
         obj.model_deconstruct
       elsif obj.respond_to?( :to_hash )
         HashWIA.new( obj.to_hash )
-      elsif obj.respond_to?( :to_ary )
-        Array.new( obj.to_ary )
-      elsif obj.respond_to?( :to_h )
-        h = obj.to_h
-        h.respond_to?( :with_indifferent_access? ) ?
-          h.with_indifferent_access :
-          HashWIA.new( h )
-      elsif obj.respond_to?( :each_pair )
-        HashWIA.new.tap do |h|
-          obj.each_pair do |k,v| ; h[k] = v ; end
-        end
+      elsif array_like?( obj )
+        Array.new( obj.to_a )
+      elsif hash_analogous?( obj )
+        HashWIA.new( obj.to_h )
+      elsif map_analogous?( obj )
+        deconstruct_from_pairs( obj )
       else
         obj
+      end
+    end
+
+    def array_like?(obj)
+      return true if \
+        obj.respond_to?( :to_ary )
+
+      return false if \
+        obj.respond_to?( :to_hash )
+
+      obj.respond_to?( :to_a   ) &&
+      obj.respond_to?( :each   ) &&
+      obj.respond_to?( :+      )
+    end
+
+    def hash_analogous?(obj)
+      obj.respond_to?( :to_h ) &&
+      obj.respond_to?( :each_pair )
+    end
+
+    def map_analogous?(obj)
+      obj.respond_to?( :each_pair ) &&
+      obj.respond_to?( :values    ) &&
+      obj.respond_to?( :[]        )
+    end
+
+    def deconstruct_from_pairs(obj)
+      HashWIA.new.tap do |h|
+        obj.each_pair do |k,v| ; h[k] = v ; end
       end
     end
   end
