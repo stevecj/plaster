@@ -36,6 +36,14 @@ module Plaster
       wrapper.send self.class.wrapper_attrib
     end
 
+    def each
+      return Enumerator.new(self, :each) unless block_given?
+      inner_array.each do |wrapper|
+        value = wrapper.send(self.class.wrapper_attrib)
+        yield value
+      end
+    end
+
   end
 
 end

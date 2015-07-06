@@ -18,7 +18,7 @@ module Plaster
           wrap_each StringifyingWrapper, :entry
         end }
 
-        it "wraps each item when it is written to an index position" do
+        it "wraps each entry when it is written to an index position" do
           subject[0] = 'abc'
           subject[1] = 'def'
           expect( subject.inner_array ).to eq( [
@@ -27,12 +27,33 @@ module Plaster
           ] )
         end
 
-        it "unwraps each item when it is read from an index position" do
+        it "unwraps each entry when it is read from an index position" do
           subject.inner_array <<
             StringifyingWrapper.new(entry: 'aaa') <<
             StringifyingWrapper.new(entry: 'bbb')
           expect( subject[0] ).to eq('aaa')
           expect( subject[1] ).to eq('bbb')
+        end
+
+        describe '#each' do
+          before do
+            subject.inner_array <<
+              StringifyingWrapper.new(entry: 'aaa') <<
+              StringifyingWrapper.new(entry: 'bbb')
+          end
+
+          it "enumerates unwrapped entries when given a block" do
+            yielded = []
+            subject.each do |entry| ; yielded << entry ; end
+            expect( yielded ).to eq( %w[aaa bbb] )
+          end
+
+          it "returns an enumerator for unwrapped entries when not given a block" do
+            enumerator = subject.each
+            expect( enumerator.next ).to eq('aaa')
+            expect( enumerator.next ).to eq('bbb')
+            expect{ enumerator.next }.to raise_exception( StopIteration )
+          end
         end
       end
     end
