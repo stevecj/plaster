@@ -35,24 +35,30 @@ module Plaster
           expect( subject[1] ).to eq('bbb')
         end
 
-        describe '#each' do
+        context "enumeration" do
           before do
             subject.inner_array <<
               StringifyingWrapper.new(entry: 'aaa') <<
               StringifyingWrapper.new(entry: 'bbb')
           end
 
-          it "enumerates unwrapped entries when given a block" do
-            yielded = []
-            subject.each do |entry| ; yielded << entry ; end
-            expect( yielded ).to eq( %w[aaa bbb] )
+          describe '#each' do
+            it "enumerates unwrapped entries when given a block" do
+              yielded = []
+              subject.each do |entry| ; yielded << entry ; end
+              expect( yielded ).to eq( %w[aaa bbb] )
+            end
+
+            it "returns an enumerator for unwrapped entries when not given a block" do
+              enumerator = subject.each
+              expect( enumerator.next ).to eq('aaa')
+              expect( enumerator.next ).to eq('bbb')
+              expect{ enumerator.next }.to raise_exception( StopIteration )
+            end
           end
 
-          it "returns an enumerator for unwrapped entries when not given a block" do
-            enumerator = subject.each
-            expect( enumerator.next ).to eq('aaa')
-            expect( enumerator.next ).to eq('bbb')
-            expect{ enumerator.next }.to raise_exception( StopIteration )
+          it "is enumerable over unwrapped entries" do
+            expect( subject.entries ).to eq( %w[aaa bbb] )
           end
         end
       end

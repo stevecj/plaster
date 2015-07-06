@@ -17,6 +17,8 @@ module Plaster
       end
     end
 
+    include Enumerable
+
     attr_reader :inner_array
 
     def initialize
