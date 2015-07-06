@@ -35,6 +35,17 @@ module Plaster
           expect( subject[1] ).to eq('bbb')
         end
 
+        it "fills implicitly-created positions with new wrapper instances" do
+          subject[0] = 'abc'
+          subject[3] = 'def'
+          expect( subject.inner_array ).to eq( [
+            StringifyingWrapper.new(entry: 'abc'),
+            StringifyingWrapper.new,
+            StringifyingWrapper.new,
+            StringifyingWrapper.new(entry: 'def')
+          ] )
+        end
+
         context "enumeration" do
           before do
             subject.inner_array <<
@@ -60,6 +71,16 @@ module Plaster
           it "is enumerable over unwrapped entries" do
             expect( subject.entries ).to eq( %w[aaa bbb] )
           end
+        end
+
+        it "pushes wrapped entries onto end of list" do
+          subject.push 'aaa', 'bbb'
+          subject << 'ccc'
+          expect( subject.inner_array ).to eq( [
+            StringifyingWrapper.new(entry: 'aaa'),
+            StringifyingWrapper.new(entry: 'bbb'),
+            StringifyingWrapper.new(entry: 'ccc')
+          ] )
         end
       end
     end
