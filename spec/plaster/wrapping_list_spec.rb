@@ -11,6 +11,16 @@ module Plaster
       end
     end
 
+    class Fruit < Struct.new(:name, :color)
+    end
+
+    class FructifyingWrapper
+      include Virtus.model
+      values do
+        attribute :entry, Fruit, lazy: true
+      end
+    end
+
     describe WrappingList do
       describe "a subclass using a stringifying wrapper" do
         subject{ subclass.new }
@@ -80,6 +90,23 @@ module Plaster
             StringifyingWrapper.new(entry: 'aaa'),
             StringifyingWrapper.new(entry: 'bbb'),
             StringifyingWrapper.new(entry: 'ccc')
+          ] )
+        end
+      end
+
+      describe "a subclass using a struct-containing wrapper" do
+        subject{ subclass.new }
+        let( :subclass ) { Class.new(described_class) do
+          wrap_each FructifyingWrapper, :entry
+        end }
+
+        it "returns deconstructed contents via #model_deconstruct" do
+          subject <<
+            Fruit.new('banana', 'yellow') <<
+            Fruit.new('tomato', 'red')
+          expect( subject.model_deconstruct ).to eq( [
+            HashWIA.new(name: 'banana', color: 'yellow'),
+            HashWIA.new(name: 'tomato', color: 'red')
           ] )
         end
       end

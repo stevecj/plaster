@@ -25,6 +25,10 @@ module Plaster
       @inner_array = []
     end
 
+    def model_deconstruct
+      Plaster.deconstruct( to_a )
+    end
+
     def []=(index, value)
       old_length = inner_array.length
       wrapper = (
@@ -56,6 +60,7 @@ module Plaster
       wrapper = self.class.wrapper_class.new
       wrapper.send self.class.wrapper_attrib_writer, value
       inner_array << wrapper
+      self
     end
 
     def push(*values)
