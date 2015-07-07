@@ -1,5 +1,10 @@
 module Plaster
 
+  # A list of entry values, each stored in an attribute of an
+  # instance of a specified struct-like wrapper class. This
+  # allows the list to apply the same enforcement and/or
+  # transformation that the wrapper's attribute write/read
+  # process does.
   class WrappingList
 
     class << self
@@ -11,6 +16,9 @@ module Plaster
 
       private
 
+      # Called in the body of a subclass definition to specify
+      # the wrapper class and attribute name in which to store
+      # each entry.
       def wrap_each(klass, attrib)
         @wrapper_class = klass
         @wrapper_attrib = attrib

@@ -2,6 +2,10 @@ require 'active_support/hash_with_indifferent_access'
 
 module Plaster
 
+  # Deconstructs a hierarchical data structure comprised of
+  # struct-like and array-like objects into a homologous
+  # structure of hashes (HashWithIndifferentAccess) and arrays
+  # (Array).
   class ModelDeconstructor
 
     class << self
