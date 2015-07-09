@@ -1,0 +1,4 @@
+Version 0.1.1
+  - Add this CHANGELOG file.
+  - Fix bugs related to improper loading & usage of
+    HashWithIndifferentAccess from activesupport gem.
