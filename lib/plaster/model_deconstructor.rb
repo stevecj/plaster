@@ -1,5 +1,3 @@
-require 'active_support/hash_with_indifferent_access'
-
 module Plaster
 
   # Deconstructs a hierarchical data structure comprised of
@@ -77,7 +75,7 @@ module Plaster
     end
 
     def deconstruct_from_hash_like(obj)
-      hash = obj.to_h
+      hash = HashWithIndifferentAccess.new(obj.to_h)
       deconstruct_hash_values!( hash )
     end
 
